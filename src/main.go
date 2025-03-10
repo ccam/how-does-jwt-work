@@ -1,7 +1,5 @@
 package main
 
-
-# boilerplate 
 import (
 	"net/http"
 
