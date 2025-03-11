@@ -2,17 +2,25 @@ package main
 
 // boilerplate
 import (
-	"net/http"
-
 	"github.com/gin-gonic/gin"
+	"gitlab.com/ccam__/how-does-jwt-work/src/Controllers"
 )
 
+func Cors() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
+		c.Next()
+	}
+}
+
 func main() {
-	r := gin.Default()
-	r.GET("/ping", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{
-			"message": "pong",
-		})
-	})
-	r.Run() // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
+	router := gin.Default()
+
+	router.LoadHTMLGlob("./templates/*")
+	router.Use(Cors())
+	router.GET("/", Controllers.GetRoot)
+	router.GET("/admin/", Controllers.GetAdmin)
+	router.GET("/dashboard/", Controllers.GetUserDashboard)
+	router.GET("/login/", Controllers.GetLogIn)
+	router.Run("localhost:8080")
 }
