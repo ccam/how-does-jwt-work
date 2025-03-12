@@ -4,6 +4,7 @@ package main
 import (
 	"github.com/gin-gonic/gin"
 	"gitlab.com/ccam__/how-does-jwt-work/src/Controllers"
+	"gitlab.com/ccam__/how-does-jwt-work/src/middleware"
 )
 
 func Cors() gin.HandlerFunc {
@@ -18,9 +19,26 @@ func main() {
 
 	router.LoadHTMLGlob("./templates/*")
 	router.Use(Cors())
-	router.GET("/", Controllers.GetRoot)
-	router.GET("/admin/", Controllers.GetAdmin)
-	router.GET("/dashboard/", Controllers.GetUserDashboard)
-	router.GET("/login/", Controllers.GetLogIn)
-	router.Run("localhost:8080")
+
+	// Group routes for admin access and normal user access.
+
+	authRoutes := router.Group("/auth")
+	authRoutes.Use(middleware.JWTAuth())
+	authRoutes.POST("/register", Controllers.PostRegister)
+	authRoutes.POST("/login", Controllers.PostLogin)
+
+	adminRoutes := router.Group("/admin")
+	adminRoutes.Use(middleware.JWTAuth())
+	adminRoutes.GET("/admin", Controllers.GetAdmin)
+
+	userRoutes := router.Group("/user/")
+	userRoutes.Use(middleware.JWT())
+	userRoutes.GET("/dashboard", Controllers.GetUserDashboard)
+
+	publicRoutes := router.Group("/public")
+	publicRoutes.GET("/", Controllers.GetRoot)
+	publicRoutes.GET("/login", Controllers.GetLogin)
+	publicRoutes.POST("/user-login", Controllers.PostLogin)
+
+	router.Run("localhost:8000")
 }
