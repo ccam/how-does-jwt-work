@@ -32,7 +32,7 @@ func main() {
 	adminRoutes.GET("/admin", Controllers.GetAdmin)
 
 	userRoutes := router.Group("/user/")
-	userRoutes.Use(middleware.JWT())
+	userRoutes.Use(middleware.JWTAuth())
 	userRoutes.GET("/dashboard", Controllers.GetUserDashboard)
 
 	publicRoutes := router.Group("/public")

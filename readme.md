@@ -11,4 +11,4 @@ I don't know how JWT works, I don't know how HTMX works. This repo outlines my p
 # Log and Goals
 If you would like to read my coding session summary and goals for next session navigate [here](./docs/log). 
 
-
+note: user id's 1-5 are admin. 
